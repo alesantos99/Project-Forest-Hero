@@ -52,12 +52,12 @@ local arrow
 
 local sheetOptions =
 {
-    width = 209,
-    height = 257,
-    numFrames = 6
+    width = 147,
+    height = 216,
+    numFrames = 22
 }
 
-local moveHero=  graphics.newImageSheet( "Images/spritesmovendo.png", sheetOptions )
+local moveHero=  graphics.newImageSheet( "Images/spriteshero.png", sheetOptions )
 
 
 
@@ -65,46 +65,60 @@ local sequences_hero = {
     -- first sequence (consecutive frames)
 	{
         name = "idleLeft",
-        frames = { 1},
+        frames = { 20},
         loopCount = 0
     },
     {
         name = "idleRight",
-        frames = { 3},
+        frames = { 21},
         loopCount = 0
     },
     
 	{
         name = "walkLeft",
         --start = 1,
-        --count = 2,
-        frames = { 1,2,1},
-        time = 400,
+        --count = 6,
+        frames = { 1,2,3,4,5,6},
+        time = 800,
         loopCount = 0,
     	loopDirection = "forward"
 
     },
     {
         name = "walkRight",
-        start = 3,
-        time = 	300,
-        count = 2,
+        start = 7,
+        time = 	800,
+        count = 6,
         loopCount = 0,
     	loopDirection = "forward"
+    	
 
     },
     {
         name = "jumpLeft",
-        frames = { 6},
-        loopCount = 0
+        frames = { 20},
+        loopCount = 0,
+        time = 1500
     },
     {
         name = "jumpRight",
-        frames = { 5},
+        frames = { 17,21},
+        time =  200,
         loopCount = 0
     },
-    -- next sequence (non-consecutive frames)
-    
+
+    {
+    	name = "shootLeft",
+    	frames = { 15,16},
+      	time =  800,
+        loopCount = 0  
+   	},
+    {
+    	name = "shootRight",
+    	frames = { 22,19},
+      	time =  200,
+        loopCount = 0  
+   	}
 }
 
 local hero = {} 
@@ -116,47 +130,11 @@ hero:setSequence("idleRight")
 hero:play()
 
 
-local  sheetOptions1 = {
-
-	width = 239,
-	height = 260,
-	frames = 6
-}
-
-local atackHero=  graphics.newImageSheet( "Images/spritesatacando.png", sheetOptions1 )
-
-
-local sequenceAtack ={
-
-	{
-        name = "shootArrowLeft",
-        
-        frames = { 1,5},
-        time = 400,
-        loopCount = 0,
-    	loopDirection = "forward"
-
-    },
-
-    {
-        name = "shootArrowRight",
-        
-        frames = { 2,6},
-        time = 400,
-        loopCount = 0,
-    	loopDirection = "forward"
-
-    }
-    
-}
- 
-
-
 function scene:create( event )
 
 	local sceneGroup = self.view
 	
-	--physics.setDrawMode("hybrid")
+	physics.setDrawMode("hybrid")
 	physics.start()
 
 	physics.pause()
@@ -192,6 +170,7 @@ function scene:create( event )
 
 	physics.addBody( ground, "static",{ bounce=0.0, friction=0.3 } )
 	
+	
 
 	local ground1 = display.newImageRect("Images/asset3.png", 500,400)
 
@@ -205,9 +184,20 @@ function scene:create( event )
 
 	physics.addBody( ground1, "static",{ bounce=0.0, friction=0.3 } )
 	
+	local  wallLeft = display.newRect(10,display.actualContentHeight,10,display.actualContentHeight)
+
+	wallLeft.x = 5
+
+	wallLeft.y = display.contentCenterY
+
+	wallLeft.alpha = 0.1
 	
+	wallLeft.id = "wall"
+	--wallLeft:setFillColor(1,1,1)
 
 
+	physics.addBody( wallLeft, "static",{ bounce=0.0, friction=0.3 } )
+	
 	local ground2 = display.newImageRect("Images/asset3.png",800,200)
 
 	ground2.x = 1500
@@ -220,6 +210,23 @@ function scene:create( event )
 
 
 	physics.addBody( ground2, "static",{ bounce=0.0, friction=0.3 } )
+
+	
+	--local  enemy1 = display.newRect(50,50,50,50)
+
+	--enemy1.x = 1900 
+
+	--enemy1.y = display.contentHeight-400
+
+	--wallLeft.alpha = 0.1
+	
+	--enemy1.id = "enemy"
+	--wallLeft:setFillColor(1,1,1)
+
+
+	physics.addBody( enemy1, "static",{ bounce=0.0, friction=0.3 } )
+	
+
 	
 
 	local ground3 = display.newImageRect("Images/asset3.png",1200,400)
@@ -266,7 +273,7 @@ function scene:create( event )
     hero.sensorOverlaps = 0
     
 
-	physics.addBody( hero,"dynamic", { density=2, friction=0.3, bounce= 0.0 } )
+	physics.addBody( hero,"dynamic", { density=3, friction=0.5, bounce= 0.0 } )
 
 	
 	hero.isFixedRotation = true
@@ -327,9 +334,8 @@ function scene:create( event )
 	buttonShoot:addEventListener("touch", shootArrow)
 
 	buttonShoot.id = "shoot"
-
-
-
+	Runtime:addEventListener("collision", arrowCollide)	
+	
 	Runtime:addEventListener("collision",jumpCollide)	
 	camera:add(hero,1,true)	
 	
@@ -345,73 +351,70 @@ function scene:create( event )
 
 	camera:layer(2).paralaxRatio= 0.5
 	local levelWidth = display.actualContentWidth*4
-	--camera:setFocus(hero)
-	print("acw", display.actualContentWidth/2)
 	camera:setBounds(display.actualContentWidth/2,levelWidth-display.actualContentWidth*2-1200, -1000, display.contentHeight-1200)	
 	
 	if(hero.x > 1260)then
 		camera:remove(ground1)
 	end	
 
-	--camera:insert(background)
-
-	--camera:insert( ground)
-		
-	--camera:insert( hero)
-	
-	--sceneGroup:insert( background )
-	--sceneGroup:insert( ground) 
-	--sceneGroup:insert( hero)
-
 	sceneGroup:insert(camera)
-	
-
-	
 	sceneGroup:insert( buttonLeft )
 	sceneGroup:insert( buttonRight)
 	sceneGroup:insert( buttonJump)
-	
 
 end
 
 
 
 local hX , hY
+local  isLeft, isRight
+
+local  shootLeft  
 
 function doControls(event)
 	local pressed = event.target
 
 	
 	if event.phase == "began" then
-
+		
 		if pressed.id == "left" then
+			shootLeft = true
 			if(hero.x > 170) then
+
 				display.currentStage:setFocus(buttonLeft)
 				
-				
+			
 				local  x = hero.x + hero.speed
 
 				hero:applyLinearImpulse(-200,0, x, hero.y)
-				hero:setSequence( "walkLeft" )  -- switch to "fastRun" sequence
+				hero:setSequence( "walkLeft")
+				  -- switch to "fastRun" sequence
 	    		hero:play()
 				print("Hero x",hero.x)
 				print("Hero y",hero.y)
 				hX = -hero.x
 				hY = hero.y
-
+				isLeft = true
 				--hero.velocity = -hero.speed
+				Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+
 			end
 		elseif pressed.id == "right" then
+			shootRight = true	
 
 			display.currentStage:setFocus(buttonRight)
 
 			hero:applyLinearImpulse(200,0, hero.x, hero.y)
 			hero:setSequence( "walkRight" )  -- switch to "fastRun" sequence
     		hero:play()
-		
-			--hero.velocity = hero.speed
+			
 			hX = hero.x
 			hY = hero.y
+
+			isRight = true
+
+			Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+
 
 		elseif pressed.id == "jump" and hero.sensorOverlaps > 0 then
 			
@@ -420,10 +423,18 @@ function doControls(event)
 				display.currentStage:setFocus(buttonJump)
 				local vx, vy = hero:getLinearVelocity()
 				hero:setLinearVelocity( vx, 0 )	
-				hero:applyLinearImpulse(50,-1700, hero.x, hero.y)
+				hero:applyLinearImpulse(0,-1700, hero.x, hero.y)
 				hero.count = 1
-				hero:setSequence( "jumpRight" )  -- switch to "fastRun" sequence
-	    		hero:play()
+				event.target.isFocus = true
+				if  isLeft == true then
+					--print("passei")
+					--hero:setSequence( "jumpLeft" )  -- switch to "fastRun" sequence
+	    			hero:play()
+	    			--print("passei")
+	    		else 
+	    			--hero:setSequence( "jumpRight" )  -- switch to "fastRun" sequence
+	    			hero:play()
+	    		end
 				--heroJumps = false
 				
 				--heroJumps = heroJumps+1
@@ -431,27 +442,52 @@ function doControls(event)
 		
 			end
 
-	elseif event.phase == "ended" then 	
+	elseif event.phase == "ended" or event.phase == "cancelled" then 	
+		isLeft = false	
+		isRight = false
 		if pressed.id == "left" then
 
 			display.currentStage:setFocus(nil)
-			
+			Runtime:removeEventListener("enterFrame",moveHeroEnterFrame)
+			hero:setSequence( "idleLeft" )
+		
 		elseif pressed.id == "right" then
 			
 			display.currentStage:setFocus(nil)
+			Runtime:removeEventListener("enterFrame",moveHeroEnterFrame)
+			
+			hero:setSequence( "idleRight" )  -- switch to "fastRun" sequence
+
+
 		
 		elseif pressed.id == "jump" then
 			
 			display.currentStage:setFocus(nil)
-		
 			
-		
+			--hero:setSequence( "idleRight")  -- switch to "fastRun" sequence
+			hero:play()
 		end
 		
 			
 	end 
 
 end
+
+function moveHeroEnterFrame(event)
+	if isLeft == true then
+		hero:setLinearVelocity(-170,70)
+
+		hero:applyLinearImpulse(-200,0, hero.x, hero.y)
+
+	elseif isRight == true then
+		hero:setLinearVelocity(170,70)
+
+		hero:applyLinearImpulse(200,0, hero.x, hero.y)
+		
+	end 
+end
+
+
 function shootArrow(event)
 	
 
@@ -463,55 +499,54 @@ function shootArrow(event)
 
 		if pressed.id == "shoot" then
 				
-				display.currentStage:setFocus(buttonShoot)
+				if (shootLeft == true) then
+					--Runtime.addEventListener("collision", arrowCollide)
+					hero:setSequence("shootLeft")
+					hero:play()
+					display.currentStage:setFocus(buttonShoot)
+					
+					local arrow = display.newImageRect("Images/arrow1.png",100,100)
 				
-				--local bullet = display.newCircle( 100, 100, 10 )
+					physics.addBody( arrow, "dynamic")
 
-				--bullet.x = hX
+					arrow.gravityScale = 0
 
-				---bullet.y = hY
+					arrow.isBullet = true
+					arrow.x = hero.x -30
+					arrow.y = hero.y-50
+					arrow.id = "arrow"
+					arrow:rotate(180)
+					arrow:setLinearVelocity( 800, 0 )
+				else if (shootRight == true) then
+					
+					--Runtime.addEventListener("collision", arrowCollide)
 
+					hero:setSequence("shootRight")
+					hero:play()
+					display.currentStage:setFocus(buttonShoot)
+					
+					local arrow = display.newImageRect("Images/arrow1.png",100,100)
+				
+					physics.addBody( arrow, "dynamic")
 
-				--physics.addBody( bullet, "dynamic", { radius=10 } )
-				--bullet.gravityScale = 0
-				 
-				-- Make the object a "bullet" type object
-				--bullet.isBullet = true
-				 
-				--bullet:setLinearVelocity( 800, 0 )
-				--arrow = display.newImageRect("arrow.png",100,100)
+					arrow.gravityScale = 0
 
-				--arrow.x = hX
+					arrow.isBullet = true
+					arrow.x = hero.x +30
+					arrow.y = hero.y-50
+					arrow.id = "arrow"
+					--arrow:rotate(180)
+					arrow:setLinearVelocity( 800, 0 )
+				end
 
-				---arrow.y = 500
-
-				--physics.addBody( arrow, "dynamic")
-
-				--arrow.isBullet = true
-
-				--arrow.gravityScale = 0
-				---arrow:setLinearVelocity( 800, 0 ) 
-
-				local arrow = display.newImageRect("Images/arrow.png",100,100)
-			
-				physics.addBody( arrow, "dynamic")
-
-				arrow.gravityScale = 0
-
-				arrow.isBullet = true
-				arrow.x = hero.x
-				arrow.y = hero.y
-				--transition.to ( arrow, { time = 1000, x = hero.X, y =-100} )
-				arrow:setLinearVelocity( 800, 0 )
-				--physics.addBody(arrow, "static", {density = 1, friction = 0, bounce = 0})
-
-				--transition.to ( arrow, { time = 1000, x = hX, y =-100} )
-
+				end
+				
 	    end
 	elseif event.phase == "ended" then
 
 			display.currentStage:setFocus(nil)
-		
+			hero:setSequence("idle")
+			shootLeft = false
 		
 
 	end
@@ -519,16 +554,45 @@ function shootArrow(event)
 
 end
 
+function arrowCollide(event)
+	local object1 = event.object1
+
+ 	local object2 = event.object2
+ 	
+ 	
+ 	if ( object1.id == "ground" and object2.id == "arrow" ) then
+ 		print("passei")
+        -- Foot sensor has entered (overlapped) a ground object
+        if ( event.phase == "began" ) then
+        	display.remove(arrow)
+
+        elseif ( event.phase == "ended" ) then
+        
+        end
+    elseif ( object1.id == "arrow" and object2.id == "ground" ) then
+ 		print("passei")
+        -- Foot sensor has entered (overlapped) a ground object
+        if ( event.phase == "began" ) then
+        	display.remove(arrow)
+
+        elseif ( event.phase == "ended" ) then
+        
+        end
+    
+    end
+
+end
+
+
+
 function jumpCollide( event)
 
 
  	local object1 = event.object1
 
  	local object2 = event.object2
- 	
- 	
-
- 	if ( object1.id == "ground" and object2.id == "hero" ) then
+	
+	if ( object1.id == "ground" and object2.id == "hero" ) then
  		
         -- Foot sensor has entered (overlapped) a ground object
         if ( event.phase == "began" ) then
@@ -537,7 +601,9 @@ function jumpCollide( event)
         elseif ( event.phase == "ended" ) then
             object2.sensorOverlaps = object2.sensorOverlaps - 1
         end
-    end
+    end 	
+ 	
+
 end
 
 
