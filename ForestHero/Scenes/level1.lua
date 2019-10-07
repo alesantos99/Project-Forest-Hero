@@ -224,7 +224,7 @@ function scene:create( event )
 	--wallLeft:setFillColor(1,1,1)
 
 
-	physics.addBody( enemy1, "static",{ bounce=0.0, friction=0.3 } )
+	--physics.addBody( enemy1, "static",{ bounce=0.0, friction=0.3 } )
 	
 
 	
