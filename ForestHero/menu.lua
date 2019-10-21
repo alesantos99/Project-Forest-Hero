@@ -10,6 +10,13 @@ local scene = composer.newScene()
 -- include Corona's "widget" library
 local widget = require "widget"
 
+local backgroundMusic 
+
+audio.reserveChannels( 1 )
+audio.reserveChannels( 2 )
+audio.setVolume( 0.8, { channel=1, channel = 2 } )
+
+local playMusic 
 --------------------------------------------
 
 -- forward declarations and other locals
@@ -19,9 +26,13 @@ local widget = require "widget"
 local function onPlayBtnRelease()
 	
 	-- go to level1.lua scene
+	audio.play( playMusic, { channel=2} )
+	audio.setVolume( 0.8, { channel = 2 } )
+
 	composer.gotoScene( "Scenes.level1", "fade", 500 )
-	
+
 	return true	-- indicates successful touch
+
 end
 
 function scene:create( event )
@@ -39,6 +50,9 @@ function scene:create( event )
 	background.x = 0 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
+	backgroundMusic = audio.loadStream( "Music/TheForest.wav" )
+
+	playMusic  = audio.loadStream( "Music/collect.ogg" )
 	-- create/position logo/title image on upper-half of the screen
 	--local titleLogo = display.newImageRect( "logo.png", 264, 42 )
 	--titleLogo.x = display.contentCenterX
@@ -92,6 +106,9 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
+
+		audio.play( backgroundMusic, { channel=1, loops=-1 } )
+
 	end	
 end
 
@@ -106,6 +123,8 @@ function scene:hide( event )
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
+		audio.stop( 1 )
+
 	end	
 end
 
@@ -121,6 +140,10 @@ function scene:destroy( event )
 		playBtn:removeSelf()	-- widgets must be manually removed
 		playBtn = nil
 	end
+
+	audio.dispose( backgroundMusic)
+
+
 end
 
 ---------------------------------------------------------------------------------

@@ -3,8 +3,36 @@
 -- level1.lua
 --
 -----------------------------------------------------------------------------------------
+local scores = 0
+
+local scoresLabel 
+scoresLabel = display.newText( "Scores", -1300,370, 300,300, "Fonts/ANASTAS.TTF",  150)
+scoresLabel:setFillColor( 1, 1, 0 )
 
 
+local scoresText 
+scoresText = display.newText( scores, -1000,370, 300,300, "Fonts/ANASTAS.TTF", 150 )
+scoresText:setFillColor( 1, 1, 1 )
+
+local lives = 3
+local livesLabel =  display.newText( "Lives", -1300,180, 300,300, "Fonts/ANASTAS.TTF", 150 )
+livesLabel:setFillColor( 1, 1, 0 )
+local livesText =  display.newText( lives, -1020,180, 300,300, "Fonts/ANASTAS.TTF", 150 )
+livesText:setFillColor( 1, 1, 1 )
+
+
+
+local arrows = 5
+
+local arrowsLabel =  display.newText( "Arrows", 2100,250, 400,400, "Fonts/ANASTAS.TTF", 150 )
+arrowsLabel:setFillColor( 1, 1, 0 )
+
+
+local arrowsText =  display.newText( arrows, 2450,190, 300,300, "Fonts/ANASTAS.TTF", 150 )
+livesText:setFillColor( 1, 1, 1 )
+
+
+local backgroundMusic
 
 local composer = require( "composer" )
 
@@ -17,15 +45,9 @@ local physics = require "physics"
 --------------------------------------------
 
 -- forward declarations and other locals
+
 local screenW, screenH, halfW = display.actualContentWidth, display.actualContentHeight, display.contentCenterX
 
-local wallLeft
-
-local  wallRight
-
-local  wallTop
-
-local   wallBottom
 
 -- Button's
 
@@ -41,12 +63,13 @@ local  buttonShoot
 
 local perspective = require("perspective")
 
+
 local camera = perspective.createView()
 
 --local camera
 local bullet
 
-local arrow
+
 
 --Hero sprisheet
 
@@ -129,6 +152,23 @@ hero:setSequence("idleRight")
 
 hero:play()
 
+local originHero
+local arrow = {}
+local enemy
+
+local enemy1
+local enemy2
+
+local enemy3
+
+local enemy4
+
+local heart
+
+local arrowCounter
+
+audio.reserveChannels( 1 )
+audio.setVolume( 0.5, { channel=1} )
 
 function scene:create( event )
 
@@ -139,16 +179,19 @@ function scene:create( event )
 
 	physics.pause()
 
+	backgroundMusic = audio.loadStream( "Music/TheForest.wav" )
 
+	
 	local background = display.newImageRect( "Images/bg.png", screenW, screenH)
-	background.x = display.screenOriginX
+	print("screen origin",screenW/2)
+	background.x = 0 
 	background.y = display.screenOriginY
 
 	background.anchorX = 0 
 	background.anchorY = 0
-
+	background.alpha = 0.95
 	local background1 = display.newImageRect( "Images/bg0.png", screenW, screenH)
-	background1.x = screenW-50
+	background1.x = screenW-10 
 	background1.y = display.screenOriginY
 
 	background1.anchorX = 0 
@@ -156,9 +199,9 @@ function scene:create( event )
 	--background:setFillColor( .5 )
 	--background.alpha = 0.7
 	--background1.alpha = 0.7
+	print("SW",screenW*4)
 
-
-	local ground = display.newImageRect("Images/ground.png", screenW*4,200)
+	local ground = display.newImageRect("Images/teste.png", screenW*6,200)
 
 	ground.x = display.screenOriginX
 	
@@ -170,13 +213,20 @@ function scene:create( event )
 
 	physics.addBody( ground, "static",{ bounce=0.0, friction=0.3 } )
 	
+	local wallLeft = display.newRect(10, display.contentHeight, 10, display.contentHeight)
+
+	wallLeft.x = 0
+	wallLeft.y = display.contentCenterY
+	wallLeft.alpha = 0
+	physics.addBody(wallLeft, "static",{ bounce=0.0, friction=0.3 } )
+	
 	
 
-	local ground1 = display.newImageRect("Images/asset3.png", 500,400)
+	local ground1 = display.newImageRect("Images/plataforma1.png", 1000,200)
 
-	ground1.x = display.contentCenterX
+	ground1.x = 1800
 	
-	ground1.y = display.contentHeight-200
+	ground1.y = display.contentHeight - 225
 
 	ground1.id = "ground"
 
@@ -184,89 +234,52 @@ function scene:create( event )
 
 	physics.addBody( ground1, "static",{ bounce=0.0, friction=0.3 } )
 	
-	local  wallLeft = display.newRect(10,display.actualContentHeight,10,display.actualContentHeight)
-
-	wallLeft.x = 5
-
-	wallLeft.y = display.contentCenterY
-
-	wallLeft.alpha = 0.1
 	
-	wallLeft.id = "wall"
-	--wallLeft:setFillColor(1,1,1)
+	local ground2 = display.newImageRect("Images/plataforma2.png", 1000,430)
 
-
-	physics.addBody( wallLeft, "static",{ bounce=0.0, friction=0.3 } )
+	ground2.x = 2800
 	
-	local ground2 = display.newImageRect("Images/asset3.png",800,200)
-
-	ground2.x = 1500
-	
-	ground2.y = display.contentHeight-200
+	ground2.y = display.contentHeight - 320
 
 	ground2.id = "ground"
 
 	ground2.objType = "ground"
 
-
 	physics.addBody( ground2, "static",{ bounce=0.0, friction=0.3 } )
-
 	
-	--local  enemy1 = display.newRect(50,50,50,50)
-
-	--enemy1.x = 1900 
-
-	--enemy1.y = display.contentHeight-400
-
-	--wallLeft.alpha = 0.1
+	local ground3 = display.newImageRect("Images/plataforma1.png",3000,640)
 	
-	--enemy1.id = "enemy"
-	--wallLeft:setFillColor(1,1,1)
+	ground3.x = 4800
 
-
-	--physics.addBody( enemy1, "static",{ bounce=0.0, friction=0.3 } )
-	
-
-	
-
-	local ground3 = display.newImageRect("Images/asset3.png",1200,400)
-
-	ground3.x = 2490
-	
-	ground3.y = display.contentHeight-300
+	ground3.y = display.contentHeight - 420
 
 	ground3.id = "ground"
 
 	ground3.objType = "ground"
 
-
 	physics.addBody( ground3, "static",{ bounce=0.0, friction=0.3 } )
 	
 
-	local ground4 = display.newImageRect("Images/asset3.png",600,200)
 
-	ground4.x = 3300
-	
-	ground4.y = display.contentHeight-200
+	local ground4 = display.newImageRect("Images/plataforma3.png", 2000,400)
+
+	ground4.x = 7300
+
+	ground4.y = display.contentHeight - 320
 
 	ground4.id = "ground"
 
 	ground4.objType = "ground"
 
-
 	physics.addBody( ground4, "static",{ bounce=0.0, friction=0.3 } )
 	
-
-	
-
-
-
 
 	hero.x = 180
 
 	hero.id = "hero"
 	hero.y = display.contentHeight-172
 
+	
 	
 	hero.speed = 1
 	
@@ -278,12 +291,48 @@ function scene:create( event )
 	
 	hero.isFixedRotation = true
 
+	enemy = display.newRect(100,200,100,200)
 
+	enemy.x = 2100
+
+	enemy.y = display.contentHeight-225
+	enemy.id = "enemy"
+	enemy.objType = "enemy"
+	physics.addBody(enemy,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
+
+	enemy.isFixedRotation = true
+
+	enemy1 = display.newRect(100,200,100,200)
+
+	enemy1.x = 2800
+	
+	enemy1.y = display.contentHeight -320
+	physics.addBody(enemy1,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
+
+	enemy1.isFixedRotation = true
+
+	enemy1.id = "enemy1"
+	enemy1.objType = "enemy"
+
+	enemy2 = display.newRect(100,200,100,200)
+
+	enemy2.x = 4700
+	enemy2.y = display.contentHeight -520
+	enemy2.objType = "enemy"
+	physics.addBody(enemy2,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
+
+	enemy2.isFixedRotation = true
+
+	enemy2.id = "enemy2"
+
+
+	
+	Runtime:addEventListener("collision", movieEnemies)	
 	buttonLeft = display.newImageRect("Images/btnleft.png", 200,200)
 
 	buttonLeft.id = "left"
 
-	buttonLeft.x= 200
+	buttonLeft.x= -1000
 
 	buttonLeft.y = display.contentHeight-200
 	
@@ -302,7 +351,7 @@ function scene:create( event )
 
 	buttonRight.id = "right"
 
-	buttonRight.x = 450
+	buttonRight.x = -700
 
 	buttonRight.alpha = 0.6
 
@@ -331,45 +380,106 @@ function scene:create( event )
 	buttonShoot.y = display.contentHeight-200
 
 	buttonShoot.alpha = 0.6
-	buttonShoot:addEventListener("touch", shootArrow)
+	buttonShoot:addEventListener("touch", shootArrows)
 
 	buttonShoot.id = "shoot"
+
+	heart = display.newImageRect("Images/heart.png",120,120)
+	heart.x = -1000
+	heart.y = 120
+	--scoresText.text = scores
+
+	
+	arrowCounter = display.newImageRect("Images/arrowCounter.png",200,200)
+	arrowCounter.x = 2520
+	arrowCounter.y = 140
+	arrowCounter:rotate(90)
+
 	Runtime:addEventListener("collision", arrowCollide)	
 	
 	Runtime:addEventListener("collision",jumpCollide)	
+	
+	Runtime:addEventListener("collision",heroHit)	
+	
 	camera:add(hero,1,true)	
+	camera:add(enemy,2)
+	camera:add(enemy1,2,false)
+	camera:add(enemy2,2,false)
 	
 	camera:add(ground,2,false)	
-	camera:add(ground1,3,false)
-	camera:add(ground2,4,false)
-
-	camera:add(ground3,5,false)
-	camera:add(ground4,6,false)
-			
-	camera:add(background,7,false)	
-	camera:add(background1,8,false)	
+	camera:add(ground1,2,false)
+	camera:add(ground2,2,false)
+	camera:add(ground3,2,false)
+	
+	camera:add(ground4,2,false)	
+	
+	camera:add(wallLeft,3,false)
+	camera:add(heart,3,false)
+	
+	camera:add(background,4,false)	
+	camera:add(background1,5,false)	
 
 	camera:layer(2).paralaxRatio= 0.5
-	local levelWidth = display.actualContentWidth*4
+	local levelWidth = display.actualContentWidth*4-1100
 	camera:setBounds(display.actualContentWidth/2,levelWidth-display.actualContentWidth*2-1200, -1000, display.contentHeight-1200)	
 	
 	if(hero.x > 1260)then
 		camera:remove(ground1)
 	end	
-
+	
 	sceneGroup:insert(camera)
+
+
 	sceneGroup:insert( buttonLeft )
 	sceneGroup:insert( buttonRight)
 	sceneGroup:insert( buttonJump)
+	sceneGroup:insert( buttonShoot)
+	sceneGroup:insert(scoresText)
+	sceneGroup:insert(heart)
 
 end
 
+function movieEnemies(event)
+	
+	local object1 = event.object1
 
+ 	local object2 = event.object2
+	
+	 
+	local object1 = event.object1
+
+ 	local object2 = event.object2
+	 
+	 print(object2.x)
+ 	
+ 	if ( object1.id == "ground" and object2.id == "enemy" ) then
+ 		
+        -- Foot sensor has entered (overlapped) a ground object
+        if ( event.phase == "began" ) then
+			Runtime:addEventListener("enterFrame",enemyEnterFrame)
+
+        elseif ( event.phase == "ended" ) then
+			Runtime:removeEventListener("enterFrame",enemyEnterFrame)
+
+        end
+    end
+end
+
+function enemyEnterFrame()
+	enemy:setLinearVelocity(-150,0)
+	
+
+end
+
+local function enemiesShoot()
+end
 
 local hX , hY
 local  isLeft, isRight
 
-local  shootLeft  
+local  shootLeft  = false
+
+local shootRight = true
 
 function doControls(event)
 	local pressed = event.target
@@ -378,7 +488,11 @@ function doControls(event)
 	if event.phase == "began" then
 		
 		if pressed.id == "left" then
+			
 			shootLeft = true
+			
+			shootRight = false
+			
 			if(hero.x > 170) then
 
 				display.currentStage:setFocus(buttonLeft)
@@ -401,7 +515,7 @@ function doControls(event)
 			end
 		elseif pressed.id == "right" then
 			shootRight = true	
-
+			shootLeft = false
 			display.currentStage:setFocus(buttonRight)
 
 			hero:applyLinearImpulse(200,0, hero.x, hero.y)
@@ -427,18 +541,10 @@ function doControls(event)
 				hero.count = 1
 				event.target.isFocus = true
 				if  isLeft == true then
-					--print("passei")
-					--hero:setSequence( "jumpLeft" )  -- switch to "fastRun" sequence
 	    			hero:play()
-	    			--print("passei")
 	    		else 
-	    			--hero:setSequence( "jumpRight" )  -- switch to "fastRun" sequence
 	    			hero:play()
 	    		end
-				--heroJumps = false
-				
-				--heroJumps = heroJumps+1
-				
 		
 			end
 
@@ -457,8 +563,7 @@ function doControls(event)
 			Runtime:removeEventListener("enterFrame",moveHeroEnterFrame)
 			
 			hero:setSequence( "idleRight" )  -- switch to "fastRun" sequence
-
-
+			
 		
 		elseif pressed.id == "jump" then
 			
@@ -473,6 +578,130 @@ function doControls(event)
 
 end
 
+local function updateText()
+	--scores = scores+10
+	scoresText.text = scores
+	livesText.text = lives
+	arrowsText.text = arrows
+end
+
+function heroHit(event)
+
+	local object1 = event.object1
+
+ 	local object2 = event.object2
+
+	 if (event.phase == "began") then
+		if ( object1.objType == "enemy" and object2.id == "hero" ) or
+			( object1.id == "hero" and object2.objType == "enemy" ) 
+		then
+				lives = lives -1
+				Runtime:addEventListener("enterFrame", updateText)
+		
+		end
+	end
+end
+
+function shootArrows(event)
+	local l = false
+	if event.phase == "began" then
+		print("oi")
+		if event.target.id == "shoot" then
+			display.currentStage:setFocus(buttonShoot)
+
+			if arrows > 0 then
+				arrows = arrows - 1
+				Runtime:addEventListener("enterFrame", updateText)
+				if shootRight == true then
+					l = true
+					hero:setSequence("shootRight")
+					
+					hero:play()
+								
+					
+								
+					local arrow = display.newImageRect("Images/arrow1.png",100,100)
+					
+					camera:add(arrow,2,false)
+					
+					physics.addBody( arrow, "dynamic",{isSensor = true})
+
+					arrow.gravityScale = 0
+
+					arrow.isBullet = true
+					arrow.x = hero.x+90
+					
+					print("Arrow x",arrow.x)
+					
+					arrow.y = hero.y-20
+					
+					arrow.id = "arrow"
+
+					
+					--transition.to( arrow, { x= screenW+100, time=800, } )
+
+					--arrow:setLinearVelocity( 800, 0 )
+
+					--if(arrow.x >hero.x+100) then
+					---	arrow:removeSelf()
+					--end
+					transition.to( arrow, { x=hero.x+1800, time=1000,
+					onComplete = function() display.remove( arrow ) end
+				} )
+				end
+			else 
+				if arrows > 0 then
+					
+					arrows = arrows - 1
+					Runtime:addEventListener("enterFrame", updateText)
+				
+
+					hero:setSequence("shootLeft")
+					
+					hero:play()
+				
+					local arrow = display.newImageRect("Images/arrow1.png",100,100)
+					
+					camera:add(arrow,2,false)
+					
+					physics.addBody( arrow, "dynamic",{isSensor = true})
+
+					arrow.gravityScale = 0
+
+					arrow.isBullet = true
+					arrow.x = hero.x-90
+					print("Arrow x",arrow.x)
+					arrow.y = hero.y-20
+					arrow.id = "arrow"
+					arrow:rotate(180)
+					--transition.to( arrow, { x= 1400, time=800, } )
+
+					arrow:setLinearVelocity( -800, 0 )
+					
+					transition.to( arrow, { x=hero.x-1800, time=1000,
+					onComplete = function() display.remove( arrow ) end
+				} )
+				end
+			end	
+		end
+	elseif event.phase == "ended" then
+		if event.target.id == "shoot" then
+		
+			display.currentStage:setFocus(nil)
+
+			if shootRight == true then
+				hero:setSequence("idleRight")
+				
+			else
+				hero:setSequence("idleLeft")
+				hero:play()
+			end	
+		end
+	end
+end
+
+
+
 function moveHeroEnterFrame(event)
 	if isLeft == true then
 		hero:setLinearVelocity(-170,70)
@@ -485,82 +714,21 @@ function moveHeroEnterFrame(event)
 		hero:applyLinearImpulse(200,0, hero.x, hero.y)
 		
 	end 
-end
 
-
-function shootArrow(event)
 	
-
-
-	local  pressed = event.target
-
-	print(event.target.id)
-	if event.phase == "began" then
-
-		if pressed.id == "shoot" then
-				
-				if (shootLeft == true) then
-					--Runtime.addEventListener("collision", arrowCollide)
-					hero:setSequence("shootLeft")
-					hero:play()
-					display.currentStage:setFocus(buttonShoot)
-					
-					local arrow = display.newImageRect("Images/arrow1.png",100,100)
-				
-					physics.addBody( arrow, "dynamic")
-
-					arrow.gravityScale = 0
-
-					arrow.isBullet = true
-					arrow.x = hero.x -30
-					arrow.y = hero.y-50
-					arrow.id = "arrow"
-					arrow:rotate(180)
-					arrow:setLinearVelocity( 800, 0 )
-				else if (shootRight == true) then
-					
-					--Runtime.addEventListener("collision", arrowCollide)
-
-					hero:setSequence("shootRight")
-					hero:play()
-					display.currentStage:setFocus(buttonShoot)
-					
-					local arrow = display.newImageRect("Images/arrow1.png",100,100)
-				
-					physics.addBody( arrow, "dynamic")
-
-					arrow.gravityScale = 0
-
-					arrow.isBullet = true
-					arrow.x = hero.x +30
-					arrow.y = hero.y-50
-					arrow.id = "arrow"
-					--arrow:rotate(180)
-					arrow:setLinearVelocity( 800, 0 )
-				end
-
-				end
-				
-	    end
-	elseif event.phase == "ended" then
-
-			display.currentStage:setFocus(nil)
-			hero:setSequence("idle")
-			shootLeft = false
-		
-
-	end
-
-
 end
+
 
 function arrowCollide(event)
 	local object1 = event.object1
 
  	local object2 = event.object2
+	 
+	print("scoresanTES", scores)
  	
- 	
- 	if ( object1.id == "ground" and object2.id == "arrow" ) then
+	 if ( object1.id == "ground" and object2.id == "arrow" )or
+	 ( object1.id == "arrow" and object2.id == "ground" )
+	 then
  		print("passei")
         -- Foot sensor has entered (overlapped) a ground object
         if ( event.phase == "began" ) then
@@ -569,18 +737,21 @@ function arrowCollide(event)
         elseif ( event.phase == "ended" ) then
         
         end
-    elseif ( object1.id == "arrow" and object2.id == "ground" ) then
- 		print("passei")
-        -- Foot sensor has entered (overlapped) a ground object
-        if ( event.phase == "began" ) then
-        	display.remove(arrow)
-
-        elseif ( event.phase == "ended" ) then
-        
-        end
-    
+	
+	elseif (( object1.id == "enemy" and object2.id == "arrow" )or
+	( object1.id == "arrow" and object2.id == "enemy" ) )then
+			Runtime:addEventListener("enterFrame", updateText)
+			print("scoresandepois", scores)
+			Runtime:removeEventListener("enterFrame",enemyEnterFrame)
+		
+			display.remove(object1)
+			
+			display.remove(object2)
+			
+			scores= scores+10		
+		
     end
-
+	
 end
 
 
@@ -618,6 +789,7 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
+		audio.play( backgroundMusic, { channel=1, loops=-1 } )
 		camera:track()
 		physics.start()
 	end
@@ -639,6 +811,8 @@ function scene:hide( event )
 		physics.stop()
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
+		audio.stop( 1 )
+
 	end	
 	
 end
@@ -656,6 +830,9 @@ function scene:destroy( event )
 	
 	package.loaded[physics] = nil
 	physics = nil
+
+	audio.dispose( backgroundMusic)
+
 end
 
 ---------------------------------------------------------------------------------
