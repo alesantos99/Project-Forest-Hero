@@ -75,12 +75,12 @@ local bullet
 
 local sheetOptions =
 {
-    width = 147,
-    height = 216,
+    width = 174,
+    height = 218,
     numFrames = 22
 }
 
-local moveHero=  graphics.newImageSheet( "Images/spriteshero.png", sheetOptions )
+local moveHero =  graphics.newImageSheet( "Images/herospritesfinal.png", sheetOptions )
 
 
 
@@ -152,12 +152,74 @@ hero:setSequence("idleRight")
 
 hero:play()
 
+local lumberjackOption = {
+	width = 179,
+	height = 215,
+	numFrames = 10
+}
+
+
+local moveLumberJack =  graphics.newImageSheet( "Images/enemy2.png", lumberjackOption )
+
+local sequences_lumberjack = {
+    -- first sequence (consecutive frames)
+	{
+        name = "walkEnemy2",
+        start = 6,
+        time = 	500,
+        count = 5,
+        loopCount = 0,
+    	loopDirection = "forward"
+    	
+	}
+}
+
+local hunterOptions = {
+	width = 136,
+	height = 184,
+	numFrames = 6
+}
+
+
+local moveHunter =  graphics.newImageSheet( "Images/enemy1.png", hunterOptions)
+
+local sequences_hunter = {
+    -- first sequence (consecutive frames)
+	{
+        name = "walkEnemy1",
+        start = 4,
+        time = 	500,
+        count = 1,
+        loopCount = 0,
+    	loopDirection = "forward"
+    	
+	}
+}
+
 local originHero
 local arrow = {}
-local enemy
+local enemy = {}
+enemy = display.newSprite( moveLumberJack, sequences_lumberjack )
 
-local enemy1
-local enemy2
+enemy:setSequence("walkEnemy2")
+
+enemy:play()
+
+local enemy1 = {}
+
+enemy1 = display.newSprite( moveHunter, sequences_hunter )
+
+enemy1:setSequence("walkEnemy1")
+
+enemy1:play()
+
+local enemy2 = {}
+
+enemy2 = display.newSprite( moveLumberJack, sequences_lumberjack )
+
+enemy2:setSequence("walkEnemy2")
+
+enemy2:play()
 
 local enemy3
 
@@ -174,7 +236,7 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	
-	physics.setDrawMode("hybrid")
+	--physics.setDrawMode("hybrid")
 	physics.start()
 
 	physics.pause()
@@ -193,6 +255,8 @@ function scene:create( event )
 	local background1 = display.newImageRect( "Images/bg0.png", screenW, screenH)
 	background1.x = screenW-10 
 	background1.y = display.screenOriginY
+	background1.alpha = 0.95
+	
 
 	background1.anchorX = 0 
 	background1.anchorY = 0
@@ -221,6 +285,13 @@ function scene:create( event )
 	physics.addBody(wallLeft, "static",{ bounce=0.0, friction=0.3 } )
 	
 	
+	local wallRight = display.newRect(10, display.contentHeight, 10, display.contentHeight)
+
+	wallRight.x = 8880
+	wallRight.y = display.contentCenterY
+	wallRight.alpha = 0
+	physics.addBody(wallRight, "static",{ bounce=0.0, friction=0.3 } )
+	
 
 	local ground1 = display.newImageRect("Images/plataforma1.png", 1000,200)
 
@@ -247,7 +318,7 @@ function scene:create( event )
 
 	physics.addBody( ground2, "static",{ bounce=0.0, friction=0.3 } )
 	
-	local ground3 = display.newImageRect("Images/plataforma1.png",3000,640)
+	local ground3 = display.newImageRect("Images/plataforma3.png",3000,640)
 	
 	ground3.x = 4800
 
@@ -291,18 +362,19 @@ function scene:create( event )
 	
 	hero.isFixedRotation = true
 
-	enemy = display.newRect(100,200,100,200)
+	--enemy = display.newRect(100,200,100,200)
 
 	enemy.x = 2100
 
 	enemy.y = display.contentHeight-225
 	enemy.id = "enemy"
 	enemy.objType = "enemy"
+	
 	physics.addBody(enemy,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
 
 	enemy.isFixedRotation = true
 
-	enemy1 = display.newRect(100,200,100,200)
+	--enemy1 = display.newRect(100,200,100,200)
 
 	enemy1.x = 2800
 	
@@ -314,7 +386,7 @@ function scene:create( event )
 	enemy1.id = "enemy1"
 	enemy1.objType = "enemy"
 
-	enemy2 = display.newRect(100,200,100,200)
+	--enemy2 = display.newRect(100,200,100,200)
 
 	enemy2.x = 4700
 	enemy2.y = display.contentHeight -520
@@ -328,7 +400,7 @@ function scene:create( event )
 
 	
 	Runtime:addEventListener("collision", movieEnemies)	
-	buttonLeft = display.newImageRect("Images/btnleft.png", 200,200)
+	buttonLeft = display.newImageRect("Images/btnleft.png", 300,300)
 
 	buttonLeft.id = "left"
 
@@ -347,11 +419,11 @@ function scene:create( event )
 	-- Move to right
 
 
-	buttonRight = display.newImageRect("Images/btright.png", 200,200)
+	buttonRight = display.newImageRect("Images/btright.png", 300,300)
 
 	buttonRight.id = "right"
 
-	buttonRight.x = -700
+	buttonRight.x = -600
 
 	buttonRight.alpha = 0.6
 
@@ -361,7 +433,7 @@ function scene:create( event )
 
 	-- jumpRight
 
-	buttonJump = display.newImageRect("Images/btnjump.png", 200,200)
+	buttonJump = display.newImageRect("Images/btnjump.png", 300,300)
 	buttonJump.id = "jump"
 
 	buttonJump.x = 1650
@@ -372,10 +444,10 @@ function scene:create( event )
 	buttonJump:addEventListener("touch", doControls)
 
 	-- shoot
-	buttonShoot = display.newImageRect("Images/btnarrow.png", 200,200)
+	buttonShoot = display.newImageRect("Images/btnarrow.png", 300,300)
 	
 
-	buttonShoot.x = 1900
+	buttonShoot.x = 2000
 
 	buttonShoot.y = display.contentHeight-200
 
@@ -414,6 +486,8 @@ function scene:create( event )
 	camera:add(ground4,2,false)	
 	
 	camera:add(wallLeft,3,false)
+	camera:add(wallRight,3,false)
+	
 	camera:add(heart,3,false)
 	
 	camera:add(background,4,false)	
@@ -597,7 +671,9 @@ function heroHit(event)
 		then
 				lives = lives -1
 				Runtime:addEventListener("enterFrame", updateText)
+				Runtime:removeEventListener("enterFrame",enemyEnterFrame)
 		
+				display.remove(object2)
 		end
 	end
 end
@@ -738,8 +814,8 @@ function arrowCollide(event)
         
         end
 	
-	elseif (( object1.id == "enemy" and object2.id == "arrow" )or
-	( object1.id == "arrow" and object2.id == "enemy" ) )then
+	elseif (( object1.objType == "enemy" and object2.id == "arrow" )or
+	( object1.id == "arrow" and object2.objType == "enemy" ) )then
 			Runtime:addEventListener("enterFrame", updateText)
 			print("scoresandepois", scores)
 			Runtime:removeEventListener("enterFrame",enemyEnterFrame)
@@ -748,7 +824,19 @@ function arrowCollide(event)
 			
 			display.remove(object2)
 			
-			scores= scores+10		
+			scores= scores+10
+			
+			if(scores % 20 == 0) then
+				if(lives <3) then
+					lives = lives +1
+				end
+			end
+
+			if(scores % 30 == 0) then
+				if(arrows < 5) then
+					arrows = arrows +1
+				end
+			end
 		
     end
 	

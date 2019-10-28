@@ -44,7 +44,7 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	local background = display.newImageRect( "Images/capa.png", display.actualContentWidth, display.actualContentHeight )
+	local background = display.newImageRect( "Images/begin.png", display.actualContentWidth, display.actualContentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x = 0 + display.screenOriginX 
@@ -61,17 +61,17 @@ function scene:create( event )
 	
 	-- create a widget button (which will loads level1.lua on release)
 
-	local play = display.newImageRect("Images/start.png", 300,100)
+	local play = display.newImageRect("Images/start.png", 700,300)
 
 	play.x = display.contentCenterX
-	play.y = 2120
+	play.y = 1700
 
 	play:addEventListener("touch",onPlayBtnRelease)
 
-	local selectbtn = display.newImageRect("Images/select.png", 300,100)
+	local selectbtn = display.newImageRect("Images/select.png", 700,300)
 
 	selectbtn.x = display.contentCenterX
-	selectbtn.y = 2300
+	selectbtn.y = 2100
 
 
 	--playBtn = widget.newButton{
