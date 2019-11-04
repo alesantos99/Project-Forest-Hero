@@ -26,6 +26,7 @@ livesText:setFillColor( 1, 1, 1 )
 
 local arrows = 5
 
+
 local arrowsLabel =  display.newText( "Arrows", 2100,250, 400,400, "Fonts/ANASTAS.TTF", 150 )
 arrowsLabel:setFillColor( 1, 1, 0 )
 
@@ -263,16 +264,16 @@ function scene:create( event )
 	backgroundMusic = audio.loadStream( "Music/TheForest.wav" )
 
 	
-	background = display.newImageRect( "Images/bg.png", screenW, screenH)
+	background = display.newImageRect( "Images/bg02.png", display.actualContentWidth, display.actualContentHeight)
 	
-	background.x = 0 
+	background.x = display.screenOriginX 
 	background.y = display.screenOriginY
 
 	background.anchorX = 0 
 	background.anchorY = 0
 	background.alpha = 0.95
-	background1 = display.newImageRect( "Images/bg0.png", screenW, screenH)
-	background1.x = screenW-10 
+	background1 = display.newImageRect( "Images/bg02.png",display.actualContentWidth, display.actualContentHeight)
+	background1.x =2520
 	background1.y = display.screenOriginY
 	background1.alpha = 0.95
 	
@@ -312,59 +313,6 @@ function scene:create( event )
 	physics.addBody(wallRight, "static",{ bounce=0.0, friction=0.3 } )
 	
 
-
-	ground1 = display.newImageRect("Images/plataforma1.png", 1000,200)
-
-	ground1.x = 1800
-	
-	ground1.y = display.contentHeight - 225
-
-	ground1.id = "ground"
-
-	ground1.objType = "ground"
-
-	physics.addBody( ground1, "static",{ bounce=0.0, friction=0.3 } )
-	
-	
-	ground2 = display.newImageRect("Images/plataforma2.png", 1000,430)
-
-	ground2.x = 2800
-	
-	ground2.y = display.contentHeight - 320
-
-	ground2.id = "ground"
-
-	ground2.objType = "ground"
-
-	physics.addBody( ground2, "static",{ bounce=0.0, friction=0.3 } )
-	
-	ground3 = display.newImageRect("Images/plataforma3.png",3000,640)
-	
-	ground3.x = 4800
-
-	ground3.y = display.contentHeight - 420
-
-	ground3.id = "ground"
-
-	ground3.objType = "ground"
-
-	physics.addBody( ground3, "static",{ bounce=0.0, friction=0.3 } )
-	
-
-
-	ground4 = display.newImageRect("Images/plataforma3.png", 2000,400)
-
-	ground4.x = 7300
-
-	ground4.y = display.contentHeight - 320
-
-	ground4.id = "ground"
-
-	ground4.objType = "ground"
-
-	physics.addBody( ground4, "static",{ bounce=0.0, friction=0.3 } )
-	
-
 	hero.x = 180
 
 	hero.id = "hero"
@@ -382,58 +330,6 @@ function scene:create( event )
 	
 	hero.isFixedRotation = true
 
-	--enemy = display.newRect(100,200,100,200)
-
-	enemy.x = 2100
-
-	enemy.y = display.contentHeight-225
-	enemy.id = "enemy"
-	enemy.objType = "enemy"
-	
-	physics.addBody(enemy,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
-
-	enemy.isFixedRotation = true
-
-	--enemy1 = display.newRect(100,200,100,200)
-
-	enemy1.x = 2800
-	
-	enemy1.y = display.contentHeight -320
-	physics.addBody(enemy1,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
-
-	enemy1.isFixedRotation = true
-
-	enemy1.id = "enemy1"
-	enemy1.objType = "enemy"
-
-	--enemy2 = display.newRect(100,200,100,200)
-
-	enemy2.x = 4800
-	enemy2.y = display.contentHeight -520
-	enemy2.objType = "enemy"
-	physics.addBody(enemy2,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
-
-	enemy2.isFixedRotation = true
-
-	enemy2.id = "enemy2"
-
-	enemy3.x = 5600
-	enemy3.y = display.contentHeight -520
-	enemy3.objType = "enemy"
-	physics.addBody(enemy3,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
-
-	enemy3.isFixedRotation = true
-
-	enemy3.id = "enemy3"
-
-	enemy4.x = 8000
-	enemy4.y = display.contentHeight - 480
-	enemy4.objType = "enemy"
-	physics.addBody(enemy4,"dynamic", { density=3, friction=0.5, bounce= 0.0 })
-
-	enemy4.isFixedRotation = true
-
-	enemy4.id = "enemy4"
 
 	band = display.newImageRect("Images/band.png", 180,180)
 	
@@ -514,37 +410,33 @@ function scene:create( event )
 	arrowCounter.y = 140
 	arrowCounter:rotate(90)
 
-	Runtime:addEventListener("collision", arrowCollide)	
+	---Runtime:addEventListener("collision", arrowCollide)	
 	
 	Runtime:addEventListener("collision",jumpCollide)	
 	
 	Runtime:addEventListener("collision",heroHit)	
 	
-	Runtime:addEventListener("enterFrame",callGameOver)	
+	---Runtime:addEventListener("enterFrame",callGameOver)	
 	
-	Runtime:addEventListener("collision", movieEnemies)	
+	--Runtime:addEventListener("collision", movieEnemies)	
 
-	Runtime:addEventListener("collision", collisionHeroBand)	
+	--Runtime:addEventListener("collision", collisionHeroBand)	
 
 
 	camera:add(hero,1,true)	
 	camera:add(enemy,2,false)
 
-	camera:add(enemy1,2,false)
-	camera:add(enemy2,2,false)
-	camera:add(enemy3,2,false)
-	camera:add(enemy4,2,false)
 
 	camera:add(band,2,false)
 
 
 	camera:add(ground,3,false)	
-	camera:add(ground1,3,false)
-	camera:add(ground2,3,false)
-	camera:add(ground3,3,false)
+	--camera:add(ground1,3,false)
+	--camera:add(ground2,3,false)
+	--camera:add(ground3,3,false)
 	
 		
-	camera:add(ground4,3,false)	
+	--camera:add(ground4,3,false)	
 	
 	camera:add(wallLeft,4,false)
 	camera:add(wallRight,4,false)
@@ -582,123 +474,6 @@ function scene:create( event )
 	
 end
 
-function movieEnemies(event)
-	
-	local object1 = event.object1
-
- 	local object2 = event.object2
-	
-	 
-	local object1 = event.object1
-
- 	local object2 = event.object2
-	 
-	 
- 	
- 	if ( object1.id == "ground" and object2.id == "enemy" ) then
- 		
-        -- Foot sensor has entered (overlapped) a ground object
-        if ( event.phase == "began" ) then
-			Runtime:addEventListener("enterFrame",enemyEnterFrame)
-
-        elseif ( event.phase == "ended" ) then
-			Runtime:removeEventListener("enterFrame",enemyEnterFrame)
-
-        end
-	
-	
-	elseif ( object1.id == "ground" and object2.id == "enemy1" ) then
-		print("Passou enemy 1")
-		-- Foot sensor has entered (overlapped) a ground object
-		if ( event.phase == "began" ) then
-
-			Runtime:addEventListener("enterFrame",enemy1EnterFrame)
-				
-
-		elseif ( event.phase == "ended" ) then
-			Runtime:removeEventListener("enterFrame",enemy1EnterFrame)
-				
-		end
-	
-		
-	elseif ( object1.id == "ground" and object2.id == "enemy2" ) then
-	
-		-- Foot sensor has entered (overlapped) a ground object
-		if ( event.phase == "began" ) then
-			Runtime:addEventListener("enterFrame",enemy2EnterFrame)
-				
-		elseif ( event.phase == "ended" ) then
-			Runtime:removeEventListener("enterFrame",enemy2EnterFrame)
-				
-		end
-	
-	elseif ( object1.id == "ground" and object2.id == "enemy3" ) then
-	
-		-- Foot sensor has entered (overlapped) a ground object
-		if ( event.phase == "began" ) then
-			Runtime:addEventListener("enterFrame",enemy3EnterFrame)
-				
-		elseif ( event.phase == "ended" ) then
-			Runtime:removeEventListener("enterFrame",enemy3EnterFrame)
-				
-		end
-	elseif ( object1.id == "ground" and object2.id == "enemy4" ) then
-	
-		-- Foot sensor has entered (overlapped) a ground object
-		if ( event.phase == "began" ) then
-			Runtime:addEventListener("enterFrame",enemy4EnterFrame)
-				
-		elseif ( event.phase == "ended" ) then
-			Runtime:removeEventListener("enterFrame",enemy4EnterFrame)
-				
-		end
-	
-	
-			
-	end
-end
-
-function enemyEnterFrame()
-	
-	enemy:setLinearVelocity(-300,0)
-	
-end
-
-
-function enemy1EnterFrame()
-	
-	enemy1:setLinearVelocity(-320,150)
-	
-end
-
-
-
-function enemy2EnterFrame()
-	
-	enemy2:setLinearVelocity(-300,80)
-	
-end
-
-function enemy3EnterFrame()
-	
-	enemy3:setLinearVelocity(-300,150)
-	
-end
-
-
-function enemy4EnterFrame()
-	
-	enemy4:setLinearVelocity(-200,150)
-	
-end
-
-
-
-local function enemiesShoot()
-
-		print("Enemy Shoot")
-
-end
 
 local hX , hY
 local  isLeft, isRight
@@ -971,61 +746,6 @@ function moveHeroEnterFrame()
 end
 
 
-function arrowCollide(event)
-	local object1 = event.object1
-
- 	local object2 = event.object2
-	 
- 	
-	 if ( object1.id == "ground" and object2.id == "arrow" )or
-	 ( object1.id == "arrow" and object2.id == "ground" )
-	 then
- 		
-        -- Foot sensor has entered (overlapped) a ground object
-        if ( event.phase == "began" ) then
-        	display.remove(arrow)
-			camera:remove(object2)
-        elseif ( event.phase == "ended" ) then
-        
-        end
-	
-	elseif (( object1.objType == "enemy" and object2.id == "arrow" )or
-	( object1.id == "arrow" and object2.objType == "enemy" ) )then
-		if event.phase == "began" then
-		
-				Runtime:addEventListener("enterFrame", updateText)
-				Runtime:removeEventListener("enterFrame",enemyEnterFrame)
-				Runtime:removeEventListener("enterFrame",enemy1EnterFrame)
-				Runtime:removeEventListener("enterFrame",enemy2EnterFrame)
-				Runtime:removeEventListener("enterFrame",enemy3EnterFrame)
-				Runtime:removeEventListener("enterFrame",enemy4EnterFrame)
-			
-				display.remove(object1)
-				
-				display.remove(object2)
-				camera:remove(object1)
-				camera:remove(object2)
-				
-				scores= scores+10
-				
-				if(scores % 20 == 0) then
-					if(lives <3) then
-						lives = lives +1
-					end
-				end
-
-				if(scores % 30 == 0) then
-					if(arrows < 5) then
-						arrows = arrows +1
-					end
-				end
-		
-			elseif event.phase == "ended" then
-				Runtime:removeEventListener("enterFrame", updateText)
-			end			
-	end
-	
-end
 
 function jumpCollide( event)
 
@@ -1044,48 +764,8 @@ function jumpCollide( event)
             object2.sensorOverlaps = object2.sensorOverlaps - 1
         end
     end 	
- 	
+end	
 
-end
-
-function goGameOver()
-
-	if(lives <= 0) then
-	
-		composer.gotoScene("Scenes.gameover", "fade", 500 )
-
-		
-	end
-	
-end
-function callGameOver() 
-	
-	timer.performWithDelay( 1000, goGameOver)
-
-end
-
-function  goNextLevel()
-
-	composer.gotoScene("Scenes.level2", "fade", 500 )
-
-
-end
-
-function collisionHeroBand(event) 
-	
-
-	local object1 = event.object1
-
-	local object2 = event.object2
-   
-	if ( object1.id == "band" and object2.id == "hero"
-		or object1.id == "hero" and object2.id == "band" ) then
-		
-			timer.performWithDelay( 1000, goNextLevel)
-
-    end 	
- 	
-end
 
 function scene:show( event )
 	local sceneGroup = self.view
@@ -1118,20 +798,6 @@ function scene:hide( event )
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 		
-		Runtime:removeEventListener("collision",heroHit)	
-		
-		
-		Runtime:removeEventListener("collision",arrowCollide)	
-		Runtime:removeEventListener("collision",jumpCollide)	
-		
-			
-		
-		Runtime:removeEventListener("collision",movieEnemies)	
-		Runtime:removeEventListener("collision", collisionHeroBand)	
-
-		Runtime:removeEventListener("enterFrame",callGameOver)	
-	
-
 		display.remove(sceneGroup)
 		
 		physics.stop()
