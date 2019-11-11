@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- menu.lua
+-- gameover.lua
 --
 -----------------------------------------------------------------------------------------
 
@@ -28,13 +28,13 @@ local function onPlayBtnRelease()
 	-- go to level1.lua scene
 	audio.play( playMusic, { channel=2} )
 	audio.setVolume( 0.8, { channel = 2 } )
+    composer.removeScene("Scenes.level1",false)
 
-	composer.gotoScene( "Scenes.level1", "fade", 500 )
+	composer.gotoScene( "menu", "fade", 500 )
 
 	return true	-- indicates successful touch
 
 end
-
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -45,13 +45,13 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	local background = display.newImageRect( "Images/startfn.png", display.actualContentWidth, display.actualContentHeight )
+	local background = display.newImageRect( "Images/thend.png", display.actualContentWidth, display.actualContentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x = 0 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
-	backgroundMusic = audio.loadStream( "Music/TheForest.wav" )
+	backgroundMusic = audio.loadStream( "Music/GameOver.wav" )
 
 	playMusic  = audio.loadStream( "Music/collect.ogg" )
 	-- create/position logo/title image on upper-half of the screen
@@ -62,16 +62,14 @@ function scene:create( event )
 	
 	-- create a widget button (which will loads level1.lua on release)
 
-	local play = display.newImageRect("Images/start.png", 700,300)
+	local play = display.newImageRect("Images/backtomenu.png", 800,300)
 
 	play.x = display.contentCenterX
-	play.y = 1700
+	play.y = 1800
 
 	play:addEventListener("touch",onPlayBtnRelease)
 
 	
-
-
 	--playBtn = widget.newButton{
 		--label="Play Now",
 		--labelColor = { default={255}, over={128} },
@@ -90,7 +88,7 @@ function scene:create( event )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( play)
 
-
+	--sceneGroup:insert( selectbtn)
 end
 
 function scene:show( event )
@@ -139,7 +137,7 @@ function scene:destroy( event )
 		playBtn = nil
 	end
 
-	
+	audio.dispose( backgroundMusic)
 
 
 end

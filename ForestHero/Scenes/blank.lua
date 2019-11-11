@@ -2,7 +2,7 @@ local composer = require( "composer" )
 
 local function reloadLvl()
     composer.removeScene("Scenes.level1")
-    composer.gotoScene("Scenes.gameover")
+    composer.gotoScene("Scenes.level2")
 end
 
 

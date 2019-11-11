@@ -28,6 +28,7 @@ local function onPlayBtnRelease()
 	-- go to level1.lua scene
 	audio.play( playMusic, { channel=2} )
 	audio.setVolume( 0.8, { channel = 2 } )
+    composer.removeScene("Scenes.level1",false)
 
 	composer.gotoScene( "Scenes.level1", "fade", 500 )
 
@@ -61,7 +62,7 @@ function scene:create( event )
 	
 	-- create a widget button (which will loads level1.lua on release)
 
-	local play = display.newImageRect("Images/start.png", 700,300)
+	local play = display.newImageRect("Images/tryagain.png", 800,300)
 
 	play.x = display.contentCenterX
 	play.y = 1700

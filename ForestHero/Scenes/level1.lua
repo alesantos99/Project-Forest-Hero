@@ -79,11 +79,11 @@ local bullet
 local sheetOptions =
 {
     width = 174,
-    height = 218,
+    height = 224,
     numFrames = 22
 }
 
-local moveHero =  graphics.newImageSheet( "Images/herospritesfinal.png", sheetOptions )
+local moveHero =  graphics.newImageSheet( "Images/spritesherofn.png", sheetOptions )
 
 
 
@@ -136,13 +136,13 @@ local sequences_hero = {
     {
     	name = "shootLeft",
     	frames = { 15,16},
-      	time =  800,
+      	time =  700,
         loopCount = 0  
    	},
     {
     	name = "shootRight",
     	frames = { 22,19},
-      	time =  200,
+      	time =  700,
         loopCount = 0  
    	}
 }
@@ -156,13 +156,13 @@ hero:setSequence("idleRight")
 hero:play()
 
 local lumberjackOption = {
-	width = 179,
-	height = 215,
+	width = 243,
+	height = 282,
 	numFrames = 10
 }
 
 
-local moveLumberJack =  graphics.newImageSheet( "Images/enemy2.png", lumberjackOption )
+local moveLumberJack =  graphics.newImageSheet( "Images/spritesenemy1fn.png", lumberjackOption )
 
 local sequences_lumberjack = {
     -- first sequence (consecutive frames)
@@ -306,7 +306,7 @@ function scene:create( event )
 	
 	wallRight = display.newRect(10, display.contentHeight, 10, display.contentHeight)
 
-	wallRight.x = 8880
+	wallRight.x = 10800
 	wallRight.y = display.contentCenterY
 	wallRight.alpha = 0
 	physics.addBody(wallRight, "static",{ bounce=0.0, friction=0.3 } )
@@ -437,7 +437,7 @@ function scene:create( event )
 
 	band = display.newImageRect("Images/band.png", 180,180)
 	
-	band.x = 8720
+	band.x = 9800
 
 	band.y = display.contentHeight-190
 	physics.addBody( band, "static",{ bounce=0.0, friction=0.3 } )
@@ -556,7 +556,7 @@ function scene:create( event )
 
 	camera:layer(2).paralaxRatio= 0.5
 		local levelWidth = display.actualContentWidth*4-1100
-		camera:setBounds(display.actualContentWidth/2,levelWidth-display.actualContentWidth*2-1200, -1000, display.contentHeight-1200)	
+		camera:setBounds(display.actualContentWidth/2,levelWidth-display.actualContentWidth*2-1800, display.contentHeight-1200, display.contentHeight-1200)	
 		
 		if(hero.x > 1260)then
 			camera:remove(ground1)
@@ -589,13 +589,10 @@ function movieEnemies(event)
  	local object2 = event.object2
 	
 	 
-	local object1 = event.object1
-
- 	local object2 = event.object2
-	 
 	 
  	
- 	if ( object1.id == "ground" and object2.id == "enemy" ) then
+	 if ( object1.id == "ground" and object2.id == "enemy"  or
+	 		object1.id == "enemy" and object2.id == "ground") then
  		
         -- Foot sensor has entered (overlapped) a ground object
         if ( event.phase == "began" ) then
@@ -608,7 +605,6 @@ function movieEnemies(event)
 	
 	
 	elseif ( object1.id == "ground" and object2.id == "enemy1" ) then
-		print("Passou enemy 1")
 		-- Foot sensor has entered (overlapped) a ground object
 		if ( event.phase == "began" ) then
 
@@ -693,13 +689,6 @@ function enemy4EnterFrame()
 end
 
 
-
-local function enemiesShoot()
-
-		print("Enemy Shoot")
-
-end
-
 local hX , hY
 local  isLeft, isRight
 
@@ -720,41 +709,41 @@ function doControls(event)
 			shootRight = false
 			
 			if(hero.x > 170) then
-
-				display.currentStage:setFocus(buttonLeft)
+				if lives> 0 then
+					display.currentStage:setFocus(buttonLeft)
+					
 				
-			
-				local  x = hero.x + hero.speed
+					local  x = hero.x + hero.speed
 
-				hero:applyLinearImpulse(-200,0, x, hero.y)
-				hero:setSequence( "walkLeft")
-				  -- switch to "fastRun" sequence
-	    		hero:play()
-				
-				hX = -hero.x
-				hY = hero.y
-				isLeft = true
-				--hero.velocity = -hero.speed
-				Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
-
+					hero:applyLinearImpulse(-200,0, x, hero.y)
+					hero:setSequence( "walkLeft")
+					-- switch to "fastRun" sequence
+					hero:play()
+					
+					hX = -hero.x
+					hY = hero.y
+					isLeft = true
+					--hero.velocity = -hero.speed
+					Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+				end	
 			end
 		elseif pressed.id == "right" then
-			
-			shootRight = true	
-			shootLeft = false
-			display.currentStage:setFocus(buttonRight)
+			if lives > 0 then
+				shootRight = true	
+				shootLeft = false
+				display.currentStage:setFocus(buttonRight)
 
-			hero:applyLinearImpulse(200,0, hero.x, hero.y)
-			hero:setSequence( "walkRight" )  -- switch to "fastRun" sequence
-    		hero:play()
-			
-			hX = hero.x
-			hY = hero.y
+				hero:applyLinearImpulse(200,0, hero.x, hero.y)
+				hero:setSequence( "walkRight" )  -- switch to "fastRun" sequence
+				hero:play()
+				
+				hX = hero.x
+				hY = hero.y
 
-			isRight = true
+				isRight = true
 
-			Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
-
+				Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+			end	
 
 		elseif pressed.id == "jump" and hero.sensorOverlaps > 0 then
 			
@@ -785,20 +774,19 @@ function doControls(event)
 
 			display.currentStage:setFocus(nil)
 			Runtime:removeEventListener("enterFrame",moveHeroEnterFrame)
-			buttonLeft:removeEventListener("touch", moveHeroEnterFrame)
+			--buttonLeft:removeEventListener("touch", moveHeroEnterFrame)
 			hero:setSequence( "idleLeft" )
 		
 		elseif pressed.id == "right" then
-			buttonRight:removeEventListener("touch", moveHeroEnterFrame)
+			--buttonRight:removeEventListener("touch", moveHeroEnterFrame)
 			Runtime:removeEventListener("enterFrame",moveHeroEnterFrame)
-			
+
 			display.currentStage:setFocus(nil)
 			
 			hero:setSequence( "idleRight" )  -- switch to "fastRun" sequence
 			
 		
 		elseif pressed.id == "jump" then
-			
 			display.currentStage:setFocus(nil)
 			
 			--hero:setSequence( "idleRight")  -- switch to "fastRun" sequence
@@ -844,7 +832,8 @@ function heroHit(event)
 		end
 	elseif (event.phase == "ended") then
 		Runtime:removeEventListener("enterFrame",updateText)
-		object1.alpha = 1
+		
+		object1.alpha = 1.0
 	end
 end
 
@@ -854,11 +843,12 @@ function shootArrows(event)
 		
 		if event.target.id == "shoot" then
 			display.currentStage:setFocus(buttonShoot)
-
-			if arrows > 0 then
-				arrows = arrows - 1
-				Runtime:addEventListener("enterFrame", updateText)
-				if shootRight == true then
+		
+			if shootRight == true then
+				if arrows > 0 then
+					arrows = arrows - 1
+					Runtime:addEventListener("enterFrame", updateText)
+				
 					l = true
 					hero:setSequence("shootRight")
 					
@@ -883,19 +873,11 @@ function shootArrows(event)
 					
 					arrow.id = "arrow"
 
-					
-					--transition.to( arrow, { x= screenW+100, time=800, } )
-
-					--arrow:setLinearVelocity( 800, 0 )
-
-					--if(arrow.x >hero.x+100) then
-					---	arrow:removeSelf()
-					--end
 					transition.to( arrow, { x=hero.x+1800, time=1000,
 					onComplete = function() display.remove( arrow ) end
 				} )
 				end
-			else 
+			elseif shootLeft == true then 
 				if arrows > 0 then
 					
 					arrows = arrows - 1
@@ -938,10 +920,12 @@ function shootArrows(event)
 
 			display.currentStage:setFocus(nil)
 
+			transition:cancel(arrow)
+
 			if shootRight == true then
 				hero:setSequence("idleRight")
 				
-			else
+			elseif isLeft == true then
 				hero:setSequence("idleLeft")
 				hero:play()
 			end	
@@ -1059,14 +1043,20 @@ function goGameOver()
 	
 end
 function callGameOver() 
+	if(lives <= 0) then
 	
-	timer.performWithDelay( 1000, goGameOver)
+		composer.gotoScene("Scenes.gameover", "fade", 500 )
 
+		
+	end
+	
+	
 end
 
 function  goNextLevel()
 
-	composer.gotoScene("Scenes.level2", "fade", 500 )
+	composer.gotoScene("Scenes.blank", "fade", 500 )
+			
 
 
 end
@@ -1080,9 +1070,7 @@ function collisionHeroBand(event)
    
 	if ( object1.id == "band" and object2.id == "hero"
 		or object1.id == "hero" and object2.id == "band" ) then
-		
-			timer.performWithDelay( 1000, goNextLevel)
-
+			timer.performWithDelay(	1000, goNextLevel)
     end 	
  	
 end
@@ -1094,6 +1082,7 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 		
+
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
@@ -1130,18 +1119,18 @@ function scene:hide( event )
 		Runtime:removeEventListener("collision", collisionHeroBand)	
 
 		Runtime:removeEventListener("enterFrame",callGameOver)	
-	
+		
 
 		display.remove(sceneGroup)
 		
 		physics.stop()
-		
-
+		--composer.removeScene("Scenes.level1",false)
+		--composer.gotoScene("Scenes.level1")
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
 		audio.stop( 1 )
 		
-		--composer.removeScene("Scenes.level1")
+		
 		
 	end	
 	
@@ -1160,7 +1149,7 @@ function scene:destroy( event )
 	
 	package.loaded[physics] = nil
 	physics = nil
-
+	camera:destroy()
 	audio.dispose( backgroundMusic)
 
 	
