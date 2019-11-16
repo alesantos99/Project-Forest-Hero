@@ -56,5 +56,4 @@
     <li> Botão para atirar flechas</li>
     </ul>
 <h2>Diagrama de Navegação</h2>
-
- ![Diagrama de navegacao](https://github.com/alesantos99/Project-ForestHero/blob/master/Diagrama de Navegação.png)
+<img src="Diagrama de Navegação.png"> 
