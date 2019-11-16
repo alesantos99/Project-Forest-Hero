@@ -55,3 +55,6 @@
       <li>Botões com seta de para esquerda, direita e para cima para movimentar o personagem para esquerda e direita e para fazê-lo             pular.</li>
     <li> Botão para atirar flechas</li>
     </ul>
+<h2>Diagrama de Navegação</h2>
+
+ ![Diagrama de navegacao](https://github.com/alesantos99/Project-ForestHero/blob/master/Diagrama de Navegação.png)
