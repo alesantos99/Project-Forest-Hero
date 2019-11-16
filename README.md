@@ -46,3 +46,12 @@
           <li>Lenhadores</li>
           <li>Caçadores</li>
       </ul>
+<h2>Iteração do Jogador</h2>
+    <ul>
+      <li>O jogador poderá mover o personagem para frente e para trás, pular, atirar flechas nos inimigos para derrotá- los</li>
+    </ul>
+<h2>Controles</h2>
+    <ul>
+      <li>Botões com seta de para esquerda, direita e para cima para movimentar o personagem para esquerda e direita e para fazê-lo             pular.</li>
+    <li> Botão para atirar flechas</li>
+    </ul>
