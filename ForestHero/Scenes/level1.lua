@@ -724,7 +724,9 @@ function doControls(event)
 					hY = hero.y
 					isLeft = true
 					--hero.velocity = -hero.speed
+					
 					Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+					
 				end	
 			end
 		elseif pressed.id == "right" then
@@ -754,7 +756,7 @@ function doControls(event)
 				
 					
 
-				hero:applyLinearImpulse(0,-1700, hero.x, hero.y)
+				hero:applyLinearImpulse(0,-1900, hero.x, hero.y)
 				
 				hero.count = 1
 				event.target.isFocus = true
@@ -938,21 +940,24 @@ end
 function moveHeroEnterFrame()
 	if isLeft == true then
 		if lives > 0 then
-		hero:setLinearVelocity(-350,190)
+		 
+		hero:setLinearVelocity(-400,190)
 
 		hero:applyLinearImpulse(-250,0, hero.x, hero.y)
 		end	
 	elseif isRight == true then
-		if lives > 0 then
-		
-		hero:setLinearVelocity(350,190)
+			if lives > 0 then
+				if hero.x < band.x-10 then
+					hero:setLinearVelocity(400,190)
 
-		hero:applyLinearImpulse(250,0, hero.x, hero.y)
+					hero:applyLinearImpulse(250,0, hero.x, hero.y)
+				end
+			end
 		end
 	end 
 
 	
-end
+
 
 
 function arrowCollide(event)
@@ -1070,7 +1075,8 @@ function collisionHeroBand(event)
    
 	if ( object1.id == "band" and object2.id == "hero"
 		or object1.id == "hero" and object2.id == "band" ) then
-			timer.performWithDelay(	1000, goNextLevel)
+			Runtime:removeEventListener("enterFrame", moveHeroEnterFrame)
+			timer.performWithDelay(	500, goNextLevel)
     end 	
  	
 end

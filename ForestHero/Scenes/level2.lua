@@ -267,14 +267,14 @@ function scene:create( event )
 	
 	background = display.newImageRect( "Images/bg02.png", screenW, display.actualContentHeight)
 	
-	background.x = display.screenOriginX 
+	background.x = display.screenOriginX-800
 	background.y = display.screenOriginY
 
 	background.anchorX = 0 
 	background.anchorY = 0
 	background.alpha = 0.95
 	background1 = display.newImageRect( "Images/bg02.png",screenW, display.actualContentHeight)
-	background1.x =3270
+	background1.x =3270-1000
 	background1.y = display.screenOriginY
 	background1.alpha = 0.95
 	
@@ -471,7 +471,7 @@ function scene:create( event )
 
 	band = display.newImageRect("Images/band.png", 180,180)
 	
-	band.x = 7300
+	band.x = 7000
 
 	band.y = display.contentHeight-190
 	physics.addBody( band, "static",{ bounce=0.0, friction=0.3 } )
@@ -791,7 +791,7 @@ function doControls(event)
 				
 					
 
-				hero:applyLinearImpulse(0,-1700, hero.x, hero.y)
+				hero:applyLinearImpulse(0,-1900, hero.x, hero.y)
 				
 				hero.count = 1
 				event.target.isFocus = true
@@ -980,16 +980,17 @@ end
 function moveHeroEnterFrame()
 	if isLeft == true then
 		if lives > 0 then
-		hero:setLinearVelocity(-350,190)
+		hero:setLinearVelocity(-400,190)
 
 		hero:applyLinearImpulse(-250,0, hero.x, hero.y)
 		end	
 	elseif isRight == true then
 		if lives > 0 then
-		
-		hero:setLinearVelocity(350,190)
+			if hero.x < band.x-10 then
+				hero:setLinearVelocity(400,190)
 
-		hero:applyLinearImpulse(250,0, hero.x, hero.y)
+				hero:applyLinearImpulse(250,0, hero.x, hero.y)
+			end	
 		end
 	end 
 
@@ -1110,7 +1111,8 @@ function collisionHeroBand(event)
    
 	if ( object1.id == "band" and object2.id == "hero"
 		or object1.id == "hero" and object2.id == "band" ) then
-			timer.performWithDelay(	1000, goNextLevel)
+			Runtime:removeEventListener("enterFrame", moveHeroEnterFrame)
+			timer.performWithDelay(	500, goNextLevel)
     end 	
  	
 end
