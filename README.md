@@ -57,3 +57,20 @@
     </ul>
 <h2>Diagrama de Navegação</h2>
 <img src="Diagrama de Navegação.png"> 
+
+<h2>Sistema de Vidas</h2>
+<ul>
+  <li>O jogador começa com 3 pontos de vida, sempre que o herói colide com um inimigo um ponto de vida é perdido.</li>
+  <li>O jogador recuperará um ponto de vida a cada 20 pontos ganhos.</li>
+</ul>
+<h2>Sistema de Pontos</h2>
+<ul>
+  <li> Ao derrotar um inimigo o  jogador ganha 10 pontos.</li>
+  <li> A cada vinte pontos ganhos uma flecha é recuperada.</li>
+</ul>
+<h2>Fim do Jogo</h2>
+<ul>
+  <li> O jogo acaba quando todos os caçadores e lenhadores forem derrotadas, para que assim a biodiversidade do ecossistema amazônica seja preservada.</li>
+  
+</ul>
+
