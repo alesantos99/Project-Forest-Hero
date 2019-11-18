@@ -366,9 +366,9 @@ function scene:create( event )
 	physics.addBody( ground3, "static",{ bounce=0.0, friction=0.3 } )
 	
 	
-	ground4 = display.newImageRect("Images/plataforma2.png", 800,200)
+	ground4 = display.newImageRect("Images/plataforma2.png", 600,200)
 
-	ground4.x = 6130
+	ground4.x = 6000
 	
 	ground4.y = display.contentHeight-150
 
@@ -746,41 +746,41 @@ function doControls(event)
 			shootRight = false
 			
 			if(hero.x > 170) then
-
-				display.currentStage:setFocus(buttonLeft)
+				if lives > 0 then	
+					display.currentStage:setFocus(buttonLeft)
+					
 				
-			
-				local  x = hero.x + hero.speed
+					local  x = hero.x + hero.speed
 
-				hero:applyLinearImpulse(-200,0, x, hero.y)
-				hero:setSequence( "walkLeft")
-				  -- switch to "fastRun" sequence
-	    		hero:play()
-				
-				hX = -hero.x
-				hY = hero.y
-				isLeft = true
-				--hero.velocity = -hero.speed
-				Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
-
+					hero:applyLinearImpulse(-200,0, x, hero.y)
+					hero:setSequence( "walkLeft")
+					-- switch to "fastRun" sequence
+					hero:play()
+					
+					hX = -hero.x
+					hY = hero.y
+					isLeft = true
+					--hero.velocity = -hero.speed
+					Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+				end			
 			end
 		elseif pressed.id == "right" then
-			
-			shootRight = true	
-			shootLeft = false
-			display.currentStage:setFocus(buttonRight)
+			if lives > 0 then
+				shootRight = true	
+				shootLeft = false
+				display.currentStage:setFocus(buttonRight)
 
-			hero:applyLinearImpulse(200,0, hero.x, hero.y)
-			hero:setSequence( "walkRight" )  -- switch to "fastRun" sequence
-    		hero:play()
-			
-			hX = hero.x
-			hY = hero.y
+				hero:applyLinearImpulse(200,0, hero.x, hero.y)
+				hero:setSequence( "walkRight" )  -- switch to "fastRun" sequence
+				hero:play()
+				
+				hX = hero.x
+				hY = hero.y
 
-			isRight = true
+				isRight = true
 
-			Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
-
+				Runtime:addEventListener("enterFrame", moveHeroEnterFrame)
+			end		
 
 		elseif pressed.id == "jump" and hero.sensorOverlaps > 0 then
 			
